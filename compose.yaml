@@ -1,0 +1,9 @@
+services:
+  apigateway:
+    build:
+      context: .
+      dockerfile: Containerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app:z    # Shared mount with SELinux-aware label
