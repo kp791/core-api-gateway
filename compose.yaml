@@ -1,0 +1,15 @@
+services:
+  apigateway:
+    build:
+      context: .
+      dockerfile: Containerfile
+    ports:
+      - "8443:8443"
+    volumes:
+      - ./app:/app:z             # Your application code (SELinux shared)
+      - ./cert.pem:/certs/cert.pem:ro,z   # Inject local cert as read-only, SELinux shared
+      - ./key.pem:/certs/key.pem:ro,z     # Inject local key as read-only, SELinux shared
+    command: >
+      uvicorn app:app --host 0.0.0.0 --port 8443
+      --ssl-keyfile /certs/key.pem --ssl-certfile /certs/cert.pem
+
