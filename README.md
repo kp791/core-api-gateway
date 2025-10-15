@@ -56,11 +56,10 @@ Always use `:z` (shared) or `:Z` (exclusive) with volume mounts in your Compose 
 
 **Do NOT commit cert.pem or key.pem to git.**
 
-Add these lines to `.gitignore`:
+Add this line to `.gitignore`:
 
 ```
-cert.pem
-key.pem
+certs/
 ```
 
 ***
