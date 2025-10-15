@@ -1,15 +1,25 @@
+version: "3.9"
+
 services:
-  apigateway:
+  gateway:
     build:
       context: .
       dockerfile: Containerfile
     ports:
       - "8443:8443"
     volumes:
-      - ./app:/app:z             # Your application code (SELinux shared)
-      - ./cert.pem:/certs/cert.pem:ro,z   # Inject local cert as read-only, SELinux shared
-      - ./key.pem:/certs/key.pem:ro,z     # Inject local key as read-only, SELinux shared
+      # Hot-reload code in development, SELinux-safe
+      - ./app:/app/app:z
+      # Mount host certs (optional for dev)
+      - ./certs:/certs:ro,z
+    environment:
+      - PYTHONUNBUFFERED=1
     command: >
-      uvicorn app:app --host 0.0.0.0 --port 8443
-      --ssl-keyfile /certs/key.pem --ssl-certfile /certs/cert.pem
+      uvicorn app.main:app
+      --host 0.0.0.0
+      --port 8443
+      --ssl-keyfile /certs/key.pem
+      --ssl-certfile /certs/cert.pem
+      --ssl-keyfile-password ""
+      --proxy-headers
 
